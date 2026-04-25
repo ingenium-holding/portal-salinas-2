@@ -3,89 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1e3a5f">
+<meta name="theme-color" content="#420049">
 <title>Informe Diagnóstico Documental V1 — Salinas 2</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
-  /* ============== RESET & BASE (mobile-first) ============== */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-
+  /* ════════════════════════════════════════════════════════════════
+     INGENIUM HOLDING CORP — Design System Tokens v1.0
+     ════════════════════════════════════════════════════════════════ */
   :root {
-    --primary: #1e3a5f;
-    --primary-light: #2c5282;
-    --primary-dark: #0f1f3d;
-    --accent: #d69e2e;
-    --critico: #c53030;
-    --alto: #dd6b20;
-    --medio: #d69e2e;
-    --bajo: #38a169;
-    --gris-claro: #f7fafc;
-    --gris-medio: #e2e8f0;
-    --gris-borde: #cbd5e0;
-    --gris-oscuro: #4a5568;
-    --texto: #1a202c;
-    --exito: #38a169;
-    --parcial: #d69e2e;
-    --faltante: #c53030;
-    --verificar: #4299e1;
-    --pendiente: #a0aec0;
-    --sombra-suave: 0 1px 3px rgba(0,0,0,0.08);
-    --sombra-media: 0 2px 6px rgba(0,0,0,0.10);
-    --radio: 8px;
-    --radio-sm: 6px;
+    /* Brand */
+    --brand-dark:     #420049;
+    --brand-primary:  #9600C1;
+    --brand-light:    #C964FF;
+    --brand-tint:     #F0E5FF;
+    /* Acento cálido */
+    --gold:           #D4A020;
+    --gold-soft:      #F0D080;
+    --gold-tint:      #FEF7E6;
+    /* Neutros */
+    --ink:            #1A1020;
+    --muted:          #6B5B7B;
+    --border:         #E0D5EC;
+    --border-strong:  #C5B0DC;
+    --surface-subtle: #F2EDF8;
+    --bg:             #F9F7FC;
+    --white:          #FFFFFF;
+    /* Semánticos */
+    --green:          #1E7A4A;
+    --green-bg:       #E6F4ED;
+    --amber:          #C47800;
+    --amber-bg:       #FEF3DC;
+    --red:            #B83030;
+    --red-bg:         #FDEAEA;
+    --purple-badge:   #6D00A0;
+    --purple-badge-bg:#F0E5FF;
+    /* Estructura */
+    --sombra-suave: 0 1px 3px rgba(66, 0, 73, 0.08);
+    --sombra-media: 0 2px 8px rgba(66, 0, 73, 0.12);
+    --radio: 4px;
   }
 
+  /* ════════════════════════════════════════════════════════════════
+     RESET & BASE (mobile-first)
+     ════════════════════════════════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: var(--gris-claro);
-    color: var(--texto);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
     line-height: 1.55;
     font-size: 15px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
-
   img, svg, canvas { max-width: 100%; height: auto; display: block; }
 
-  /* ============== HEADER ============== */
+  /* ════════════════════════════════════════════════════════════════
+     HEADER (cover IHC)
+     ════════════════════════════════════════════════════════════════ */
   .header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    color: #fff;
-    padding: 2rem 1rem;
+    background: linear-gradient(135deg, var(--brand-dark) 0%, #6A007E 100%);
+    color: var(--white);
+    padding: 2.2rem 1rem;
     text-align: center;
+    border-bottom: 4px solid var(--gold);
+  }
+  .header .eyebrow {
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
   }
   .header h1 {
     font-size: 1.4rem;
     font-weight: 700;
     line-height: 1.25;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+    color: var(--white);
   }
   .header h2 {
     font-size: 1rem;
     font-weight: 500;
-    opacity: 0.95;
-    margin-bottom: 0.3rem;
+    color: var(--brand-light);
+    margin-bottom: 0.25rem;
     line-height: 1.35;
   }
   .header .subtitle {
-    font-size: 0.85rem;
-    opacity: 0.85;
+    font-size: 0.78rem;
+    color: var(--gold-soft);
+    letter-spacing: 0.5px;
     margin-top: 0.2rem;
+    text-transform: uppercase;
   }
   .header .version {
     display: inline-block;
-    margin-top: 1rem;
-    padding: 0.35rem 0.9rem;
-    background: rgba(255,255,255,0.18);
+    margin-top: 1.1rem;
+    padding: 0.35rem 1rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid var(--gold);
     border-radius: 20px;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    color: var(--gold-soft);
+    text-transform: uppercase;
   }
 
-  /* ============== CONTAINER ============== */
+  /* ════════════════════════════════════════════════════════════════
+     CONTAINER
+     ════════════════════════════════════════════════════════════════ */
   .container {
     width: 100%;
     max-width: 1280px;
@@ -93,87 +123,109 @@
     padding: 1rem;
   }
 
-  /* ============== CARD ============== */
+  /* ════════════════════════════════════════════════════════════════
+     CARD
+     ════════════════════════════════════════════════════════════════ */
   .card {
-    background: #fff;
-    border-radius: var(--radio);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--brand-primary);
+    border-radius: 0 var(--radio) var(--radio) 0;
     padding: 1.1rem;
     box-shadow: var(--sombra-suave);
     margin-bottom: 1rem;
   }
+  .card.gold { border-left-color: var(--gold); }
+  .card.green { border-left-color: var(--green); }
+  .card.amber { border-left-color: var(--amber); }
+  .card.red { border-left-color: var(--red); }
+  .card.dark { border-left-color: var(--brand-dark); }
   .card h3 {
-    color: var(--primary);
+    color: var(--brand-primary);
     font-size: 1rem;
-    margin-bottom: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.7rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--gris-medio);
+    border-bottom: 1px solid var(--border);
     line-height: 1.3;
   }
-  .card p { margin-bottom: 0.6rem; font-size: 0.92rem; }
+  .card p { margin-bottom: 0.6rem; font-size: 0.92rem; color: var(--ink); }
   .card p:last-child { margin-bottom: 0; }
 
-  /* ============== KPI GRID ============== */
+  /* ════════════════════════════════════════════════════════════════
+     KPI GRID
+     ════════════════════════════════════════════════════════════════ */
   .kpi-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.7rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
   }
-  .kpi-box {
-    background: #fff;
-    border-left: 4px solid var(--primary);
+  .kpi {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--brand-primary);
+    border-radius: var(--radio);
     padding: 0.85rem;
-    border-radius: var(--radio-sm);
     box-shadow: var(--sombra-suave);
   }
-  .kpi-box.critico { border-left-color: var(--critico); }
-  .kpi-box.alto { border-left-color: var(--alto); }
-  .kpi-box.exito { border-left-color: var(--exito); }
-  .kpi-box.info { border-left-color: var(--verificar); }
-  .kpi-label {
-    font-size: 0.7rem;
-    color: var(--gris-oscuro);
-    margin-bottom: 0.25rem;
+  .kpi.accent { border-top-color: var(--gold); }
+  .kpi.critico { border-top-color: var(--red); }
+  .kpi.alto { border-top-color: var(--amber); }
+  .kpi.exito { border-top-color: var(--green); }
+  .kpi .lbl {
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
     font-weight: 600;
   }
-  .kpi-value {
+  .kpi .num {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--brand-dark);
     line-height: 1.1;
+    font-variant-numeric: tabular-nums;
   }
-  .kpi-unit {
+  .kpi.accent .num { color: var(--gold); }
+  .kpi.critico .num { color: var(--red); }
+  .kpi.alto .num { color: var(--amber); }
+  .kpi.exito .num { color: var(--green); }
+  .kpi .unit {
     font-size: 0.72rem;
-    color: var(--gris-oscuro);
+    color: var(--muted);
     margin-top: 0.25rem;
     line-height: 1.3;
   }
 
-  /* ============== GRID ============== */
+  /* ════════════════════════════════════════════════════════════════
+     GRID
+     ════════════════════════════════════════════════════════════════ */
   .grid-2 {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
   }
 
-  /* ============== SECCIONES ============== */
+  /* ════════════════════════════════════════════════════════════════
+     SECCIONES (numeradas)
+     ════════════════════════════════════════════════════════════════ */
   .section-title {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    margin-top: 1.7rem;
-    margin-bottom: 0.8rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 3px solid var(--primary);
+    gap: 0.7rem;
+    margin-top: 2rem;
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid var(--gold);
   }
   .section-title .num {
     flex-shrink: 0;
     width: 1.9rem;
     height: 1.9rem;
-    background: var(--primary);
-    color: #fff;
+    background: var(--brand-dark);
+    color: var(--white);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -183,11 +235,14 @@
   }
   .section-title h2 {
     font-size: 1.05rem;
-    color: var(--primary);
+    color: var(--brand-dark);
     line-height: 1.3;
+    font-weight: 700;
   }
 
-  /* ============== CHART ============== */
+  /* ════════════════════════════════════════════════════════════════
+     CHART
+     ════════════════════════════════════════════════════════════════ */
   .chart-container {
     position: relative;
     height: 280px;
@@ -195,105 +250,122 @@
   }
   .chart-container.tall { height: 480px; }
 
-  /* ============== INFO LIST (ej. Datos del proyecto) ============== */
+  /* ════════════════════════════════════════════════════════════════
+     INFO LIST
+     ════════════════════════════════════════════════════════════════ */
   .info-list { display: flex; flex-direction: column; gap: 0.7rem; }
   .info-item {
     display: flex;
     flex-direction: column;
     padding: 0.55rem 0;
-    border-bottom: 1px solid var(--gris-medio);
+    border-bottom: 1px solid var(--border);
   }
   .info-item:last-child { border-bottom: none; }
   .info-item .label {
     font-weight: 600;
-    color: var(--gris-oscuro);
-    font-size: 0.72rem;
+    color: var(--brand-primary);
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.15rem;
+    letter-spacing: 0.6px;
+    margin-bottom: 0.2rem;
   }
-  .info-item .value { font-size: 0.92rem; line-height: 1.4; }
+  .info-item .value { font-size: 0.92rem; line-height: 1.4; color: var(--ink); }
 
-  /* ============== TABLAS RESPONSIVAS ============== */
+  /* ════════════════════════════════════════════════════════════════
+     TABLAS RESPONSIVAS
+     ════════════════════════════════════════════════════════════════ */
   .table-wrap {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin: 0.8rem -1.1rem;
     padding: 0 1.1rem;
   }
-  .data-table {
+  table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.82rem;
     min-width: 540px;
   }
-  .data-table th {
-    background: var(--primary);
-    color: #fff;
-    padding: 0.55rem 0.6rem;
+  thead th {
+    background: var(--brand-dark);
+    color: var(--white);
+    padding: 0.6rem 0.7rem;
     text-align: left;
     font-weight: 600;
     font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.5px;
     white-space: nowrap;
   }
-  .data-table td {
-    padding: 0.6rem;
-    border-bottom: 1px solid var(--gris-medio);
+  tbody td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid var(--border);
     vertical-align: top;
     line-height: 1.4;
+    color: var(--ink);
   }
-  .data-table tr:nth-child(even) td { background: var(--gris-claro); }
+  tbody tr:nth-child(even) td { background: var(--surface-subtle); }
 
-  /* Indicador de scroll en tablas */
-  .table-wrap::after {
-    content: '';
-    position: sticky;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 0;
-  }
   .scroll-hint {
     font-size: 0.72rem;
-    color: var(--gris-oscuro);
+    color: var(--muted);
     text-align: right;
     margin-top: 0.4rem;
     font-style: italic;
   }
 
-  /* ============== BADGE RIESGO ============== */
-  .riesgo {
+  /* ════════════════════════════════════════════════════════════════
+     BADGES de estado (semánticos)
+     ════════════════════════════════════════════════════════════════ */
+  .badge {
     display: inline-block;
-    padding: 0.18rem 0.55rem;
-    border-radius: 20px;
+    padding: 3px 10px;
+    border-radius: 3px;
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.5px;
-    color: #fff;
+    text-transform: uppercase;
     white-space: nowrap;
   }
-  .riesgo.critico { background: var(--critico); }
-  .riesgo.alto { background: var(--alto); }
-  .riesgo.medio { background: var(--medio); }
-  .riesgo.bajo { background: var(--bajo); }
+  .badge.critico, .badge.alta { background: var(--red-bg); color: var(--red); }
+  .badge.alto { background: var(--amber-bg); color: var(--amber); }
+  .badge.medio, .badge.media { background: var(--gold-tint); color: var(--amber); }
+  .badge.bajo, .badge.baja { background: var(--green-bg); color: var(--green); }
+  .badge.executed { background: var(--green-bg); color: var(--green); }
+  .badge.next { background: var(--purple-badge-bg); color: var(--purple-badge); }
 
-  /* ============== ALERT ============== */
+  /* ════════════════════════════════════════════════════════════════
+     CALLOUTS / ALERTS
+     ════════════════════════════════════════════════════════════════ */
+  .callout {
+    background: var(--brand-tint);
+    border-left: 4px solid var(--brand-primary);
+    border-radius: 0 var(--radio) var(--radio) 0;
+    padding: 0.9rem 1rem;
+    font-size: 0.88rem;
+    color: var(--ink);
+    margin: 0.9rem 0;
+    line-height: 1.5;
+  }
+  .callout strong { display: block; margin-bottom: 0.25rem; font-size: 0.95rem; color: var(--brand-dark); }
+
   .alert {
-    padding: 0.85rem 1rem;
-    border-radius: var(--radio-sm);
+    padding: 0.9rem 1rem;
+    border-radius: var(--radio);
     margin: 0.9rem 0;
     border-left: 4px solid;
     font-size: 0.88rem;
     line-height: 1.5;
   }
-  .alert.critico { background: #fed7d7; border-left-color: var(--critico); color: #742a2a; }
-  .alert.info { background: #bee3f8; border-left-color: var(--verificar); color: #2c5282; }
-  .alert.success { background: #c6f6d5; border-left-color: var(--exito); color: #22543d; }
-  .alert strong { display: block; margin-bottom: 0.2rem; font-size: 0.95rem; }
+  .alert.critico { background: var(--red-bg); border-left-color: var(--red); color: #6a1d1d; }
+  .alert.info { background: var(--brand-tint); border-left-color: var(--brand-primary); color: var(--brand-dark); }
+  .alert.success { background: var(--green-bg); border-left-color: var(--green); color: #154d2e; }
+  .alert.gold { background: var(--gold-tint); border-left-color: var(--gold); color: #6f5410; }
+  .alert strong { display: block; margin-bottom: 0.25rem; font-size: 0.95rem; }
 
-  /* ============== TIMELINE ============== */
+  /* ════════════════════════════════════════════════════════════════
+     TIMELINE
+     ════════════════════════════════════════════════════════════════ */
   .timeline { position: relative; padding-left: 1.8rem; margin: 1rem 0; }
   .timeline::before {
     content: '';
@@ -302,7 +374,7 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--gris-borde);
+    background: var(--border-strong);
   }
   .timeline-item { position: relative; margin-bottom: 1.1rem; }
   .timeline-item:last-child { margin-bottom: 0; }
@@ -314,150 +386,177 @@
     width: 11px;
     height: 11px;
     border-radius: 50%;
-    background: var(--primary);
-    border: 2px solid #fff;
-    box-shadow: 0 0 0 2px var(--primary);
+    background: var(--brand-primary);
+    border: 2px solid var(--white);
+    box-shadow: 0 0 0 2px var(--brand-primary);
   }
   .timeline-item .date {
     font-weight: 700;
-    color: var(--primary);
-    font-size: 0.78rem;
+    color: var(--brand-primary);
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.6px;
   }
-  .timeline-item .title { font-weight: 600; margin: 0.15rem 0; font-size: 0.92rem; }
-  .timeline-item .desc { font-size: 0.83rem; color: var(--gris-oscuro); }
+  .timeline-item .title { font-weight: 600; margin: 0.15rem 0; font-size: 0.92rem; color: var(--ink); }
+  .timeline-item .desc { font-size: 0.83rem; color: var(--muted); }
 
-  /* ============== LISTAS ============== */
+  /* ════════════════════════════════════════════════════════════════
+     LISTAS
+     ════════════════════════════════════════════════════════════════ */
   .recomendaciones-lista { list-style: none; padding: 0; }
   .recomendaciones-lista li {
-    padding: 0.55rem 0 0.55rem 1.4rem;
+    padding: 0.6rem 0 0.6rem 1.4rem;
     position: relative;
-    border-bottom: 1px solid var(--gris-medio);
+    border-bottom: 1px solid var(--border);
     font-size: 0.88rem;
     line-height: 1.5;
+    color: var(--ink);
   }
   .recomendaciones-lista li:last-child { border-bottom: none; }
   .recomendaciones-lista li::before {
     content: '▸';
     position: absolute;
     left: 0.2rem;
-    color: var(--primary);
+    color: var(--gold);
     font-weight: 700;
+    font-size: 1rem;
   }
 
   ol.numbered, ul.bulleted { padding-left: 1.2rem; font-size: 0.88rem; }
-  ol.numbered li, ul.bulleted li { margin-bottom: 0.4rem; line-height: 1.5; }
+  ol.numbered li, ul.bulleted li { margin-bottom: 0.4rem; line-height: 1.5; color: var(--ink); }
+  ol.numbered li::marker { color: var(--brand-primary); font-weight: 700; }
 
-  /* ============== USOS GRID ============== */
+  /* ════════════════════════════════════════════════════════════════
+     USOS GRID
+     ════════════════════════════════════════════════════════════════ */
   .uso-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.7rem;
-    margin-top: 0.5rem;
+    margin-top: 0.6rem;
   }
   .uso-card {
     padding: 0.85rem;
-    background: var(--gris-claro);
-    border-radius: var(--radio-sm);
-    border-left: 3px solid var(--primary);
+    background: var(--surface-subtle);
+    border-radius: var(--radio);
+    border-left: 3px solid var(--brand-primary);
   }
   .uso-card strong {
-    color: var(--primary);
+    color: var(--brand-dark);
     display: block;
     margin-bottom: 0.2rem;
     font-size: 0.9rem;
-  }
-  .uso-card span { font-size: 0.8rem; color: var(--gris-oscuro); }
-
-  /* ============== FOOTER ============== */
-  .footer {
-    text-align: center;
-    padding: 1.5rem 1rem;
-    color: var(--gris-oscuro);
-    font-size: 0.78rem;
-    line-height: 1.5;
-    border-top: 1px solid var(--gris-medio);
-    margin-top: 1.5rem;
-    background: #fff;
-  }
-  .footer p { margin: 0.2rem 0; }
-
-  /* ============== RIESGO HEADINGS ============== */
-  .riesgo-h {
-    font-size: 0.85rem;
-    margin-top: 0.8rem;
-    margin-bottom: 0.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
     font-weight: 700;
   }
-  .riesgo-h.alta { color: var(--critico); }
-  .riesgo-h.media { color: var(--alto); }
-  .riesgo-h.baja { color: var(--bajo); }
+  .uso-card span { font-size: 0.8rem; color: var(--muted); }
 
-  /* ============== TABLET ≥600px ============== */
+  /* ════════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════════ */
+  .footer {
+    text-align: center;
+    padding: 1.8rem 1rem;
+    color: var(--gold-soft);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    background: var(--brand-dark);
+    margin-top: 2rem;
+    border-top: 4px solid var(--gold);
+  }
+  .footer p { margin: 0.2rem 0; }
+  .footer strong { color: var(--white); font-weight: 700; letter-spacing: 0.5px; }
+
+  /* ════════════════════════════════════════════════════════════════
+     RIESGO HEADINGS
+     ════════════════════════════════════════════════════════════════ */
+  .riesgo-h {
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    font-weight: 700;
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .riesgo-h.alta { background: var(--red-bg); color: var(--red); }
+  .riesgo-h.media { background: var(--amber-bg); color: var(--amber); }
+  .riesgo-h.baja { background: var(--green-bg); color: var(--green); }
+
+  /* ════════════════════════════════════════════════════════════════
+     TABLET ≥600px
+     ════════════════════════════════════════════════════════════════ */
   @media (min-width: 600px) {
     body { font-size: 16px; }
-    .header { padding: 2.5rem 1.5rem; }
-    .header h1 { font-size: 1.8rem; }
-    .header h2 { font-size: 1.15rem; }
-    .header .subtitle { font-size: 0.9rem; }
+    .header { padding: 2.8rem 1.5rem; }
+    .header .eyebrow { font-size: 0.78rem; letter-spacing: 3px; }
+    .header h1 { font-size: 1.9rem; }
+    .header h2 { font-size: 1.2rem; }
+    .header .subtitle { font-size: 0.85rem; }
     .container { padding: 1.5rem; }
     .card { padding: 1.4rem; }
     .card h3 { font-size: 1.1rem; }
     .kpi-grid { grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
-    .kpi-box { padding: 1rem; }
-    .kpi-value { font-size: 1.9rem; }
-    .section-title { gap: 0.7rem; margin-top: 2rem; }
+    .kpi { padding: 1rem; }
+    .kpi .num { font-size: 1.9rem; }
+    .section-title { gap: 0.8rem; margin-top: 2.4rem; }
     .section-title .num { width: 2.1rem; height: 2.1rem; font-size: 0.95rem; }
     .section-title h2 { font-size: 1.2rem; }
     .chart-container { height: 320px; }
     .chart-container.tall { height: 480px; }
-    .data-table { font-size: 0.85rem; min-width: 0; }
-    .data-table th { font-size: 0.78rem; padding: 0.7rem; }
-    .data-table td { padding: 0.7rem; }
-    .info-list { display: grid; grid-template-columns: 160px 1fr; gap: 0.5rem 1rem; }
+    table { font-size: 0.85rem; min-width: 0; }
+    thead th { font-size: 0.78rem; padding: 0.75rem; }
+    tbody td { padding: 0.75rem; }
+    .info-list { display: grid; grid-template-columns: 170px 1fr; gap: 0.5rem 1rem; }
     .info-item { display: contents; padding: 0; border: none; }
-    .info-item .label { padding-top: 0.55rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--gris-medio); margin: 0; }
-    .info-item .value { padding-top: 0.55rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--gris-medio); }
+    .info-item .label { padding-top: 0.55rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--border); margin: 0; }
+    .info-item .value { padding-top: 0.55rem; padding-bottom: 0.55rem; border-bottom: 1px solid var(--border); }
     .uso-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  /* ============== DESKTOP ≥900px ============== */
+  /* ════════════════════════════════════════════════════════════════
+     DESKTOP ≥900px
+     ════════════════════════════════════════════════════════════════ */
   @media (min-width: 900px) {
-    .header { padding: 3rem 2rem; }
-    .header h1 { font-size: 2.2rem; }
-    .header h2 { font-size: 1.3rem; }
+    .header { padding: 3.5rem 2rem; }
+    .header h1 { font-size: 2.3rem; }
+    .header h2 { font-size: 1.35rem; }
     .container { padding: 2rem; }
     .grid-2 { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-    .kpi-value { font-size: 2.1rem; }
+    .kpi .num { font-size: 2.1rem; }
     .section-title h2 { font-size: 1.4rem; }
     .chart-container { height: 340px; }
     .uso-grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
     .table-wrap { margin: 0.8rem 0; padding: 0; overflow-x: visible; }
   }
 
-  /* ============== PRINT ============== */
+  /* ════════════════════════════════════════════════════════════════
+     PRINT
+     ════════════════════════════════════════════════════════════════ */
   @media print {
-    body { font-size: 11pt; }
-    .header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .card { break-inside: avoid; box-shadow: none; border: 1px solid var(--gris-medio); }
+    body { font-size: 11pt; background: white; }
+    .header { background: var(--brand-dark) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .footer { background: var(--brand-dark) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .card { break-inside: avoid; box-shadow: none; }
     .chart-container { height: 300px !important; }
     .scroll-hint { display: none; }
+    thead th { background: var(--brand-dark) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 
-  /* ============== ACCESIBILIDAD: focus visible ============== */
   a:focus-visible, button:focus-visible {
-    outline: 3px solid var(--accent);
+    outline: 3px solid var(--gold);
     outline-offset: 2px;
   }
+  a { color: var(--brand-primary); text-decoration: none; }
+  a:hover { color: var(--brand-dark); text-decoration: underline; }
 </style>
 </head>
 <body>
 
 <header class="header">
+  <div class="eyebrow">Ingenium Holding Corp · Fase 1</div>
   <h1>Informe de Diagnóstico de Completitud Documental</h1>
   <h2>Conjunto Residencial Salinas 2 — Propiedad Horizontal</h2>
   <div class="subtitle">Vivienda de Interés Social</div>
@@ -484,39 +583,39 @@
 
   <!-- KPIs -->
   <div class="kpi-grid">
-    <div class="kpi-box info">
-      <div class="kpi-label">Archivos recibidos</div>
-      <div class="kpi-value">655</div>
-      <div class="kpi-unit">2,43 GB en 2 lotes</div>
+    <div class="kpi">
+      <div class="lbl">Archivos recibidos</div>
+      <div class="num">655</div>
+      <div class="unit">2,43 GB en 2 lotes</div>
     </div>
-    <div class="kpi-box exito">
-      <div class="kpi-label">Clasificados IHC</div>
-      <div class="kpi-value">646</div>
-      <div class="kpi-unit">100% del acervo</div>
+    <div class="kpi exito">
+      <div class="lbl">Clasificados IHC</div>
+      <div class="num">646</div>
+      <div class="unit">100% del acervo</div>
     </div>
-    <div class="kpi-box info">
-      <div class="kpi-label">Ítems índice IHC</div>
-      <div class="kpi-value">109</div>
-      <div class="kpi-unit">cruzados con el acervo</div>
+    <div class="kpi accent">
+      <div class="lbl">Ítems índice IHC</div>
+      <div class="num">109</div>
+      <div class="unit">cruzados con el acervo</div>
     </div>
-    <div class="kpi-box critico">
-      <div class="kpi-label">Brecha obligatoria</div>
-      <div class="kpi-value">39</div>
-      <div class="kpi-unit">ítems con brecha</div>
+    <div class="kpi critico">
+      <div class="lbl">Brecha obligatoria</div>
+      <div class="num">39</div>
+      <div class="unit">ítems con brecha</div>
     </div>
-    <div class="kpi-box critico">
-      <div class="kpi-label">Memorias faltantes</div>
-      <div class="kpi-value">10</div>
-      <div class="kpi-unit">4 especialidades</div>
+    <div class="kpi critico">
+      <div class="lbl">Memorias faltantes</div>
+      <div class="num">10</div>
+      <div class="unit">4 especialidades</div>
     </div>
-    <div class="kpi-box alto">
-      <div class="kpi-label">Acueducto</div>
-      <div class="kpi-value">21,5%</div>
-      <div class="kpi-unit">206 de 960 aptos</div>
+    <div class="kpi alto">
+      <div class="lbl">Acueducto</div>
+      <div class="num">21,5%</div>
+      <div class="unit">206 de 960 aptos</div>
     </div>
   </div>
 
-  <!-- GRÁFICOS DISTRIBUCIÓN -->
+  <!-- SECCIÓN 1: ESTADO -->
   <div class="section-title"><div class="num">1</div><h2>Estado general del acervo</h2></div>
 
   <div class="grid-2">
@@ -530,7 +629,7 @@
     </div>
   </div>
 
-  <!-- CATEGORÍAS -->
+  <!-- SECCIÓN 2: CATEGORÍAS -->
   <div class="section-title"><div class="num">2</div><h2>Cumplimiento por categoría</h2></div>
 
   <div class="card">
@@ -542,7 +641,7 @@
     PLANEACIÓN, Red de Gas y Ascensores concentran la mayor brecha documental, seguidas por Estructura (13%) y Amenidades (15%).
   </div>
 
-  <!-- COBERTURA POR TORRE -->
+  <!-- SECCIÓN 3: COBERTURA POR TORRE -->
   <div class="section-title"><div class="num">3</div><h2>Cobertura por torre</h2></div>
 
   <div class="grid-2">
@@ -561,64 +660,64 @@
     Solo Torre 1 y Torre 2 cuentan con certificados completos (96/96 apartamentos). Faltan 754 certificados distribuidos en T3, T4, T5, T6, T7, T8, T9 y T10.
   </div>
 
-  <!-- MEMORIAS FALTANTES -->
+  <!-- SECCIÓN 4: MEMORIAS FALTANTES -->
   <div class="section-title"><div class="num">4</div><h2>Memorias de cálculo faltantes</h2></div>
 
-  <div class="card">
+  <div class="card red">
     <p>El índice oficial del constructor declara dos memorias AYM que suman <strong>554 folios</strong> y que nunca fueron entregadas. Adicionalmente, no aparecen memorias propias de otras especialidades clave del proyecto.</p>
     <div class="table-wrap">
-      <table class="data-table">
+      <table>
         <thead>
           <tr>
             <th>ID</th><th>Especialidad</th><th>Memoria</th><th>Diseñador</th><th>Nivel</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>E62</td><td>Estructural</td><td>Memoria cálculo estructural complementaria</td><td>GIHON INGENIERÍA SAS</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E63</td><td>Hidráulica</td><td>Memoria hidráulica (suministro + RCI + bombeo)</td><td>—</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E64</td><td>Sanitaria</td><td>Memoria sanitaria (residuales + pluviales + eyectores)</td><td>—</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E65</td><td>Eléctrica</td><td>Memoria cálculo eléctrico (cargas + protecciones)</td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E66</td><td>Apantallamiento</td><td>Memoria análisis electrogeométrico</td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E67</td><td>Iluminación</td><td>Memoria fotométrica AYM <strong>(529 folios)</strong></td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E68</td><td>TDT/Telecom</td><td>Memoria infraestructura TDT <strong>(25 folios)</strong></td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E69</td><td>Gas natural</td><td>Memoria diseño y cálculo gas natural</td><td>CH INGENIEROS</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E71</td><td>RCI</td><td>Memoria cálculo sistema RCI</td><td>—</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+          <tr><td>E62</td><td>Estructural</td><td>Memoria cálculo estructural complementaria</td><td>GIHON INGENIERÍA SAS</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E63</td><td>Hidráulica</td><td>Memoria hidráulica (suministro + RCI + bombeo)</td><td>—</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E64</td><td>Sanitaria</td><td>Memoria sanitaria (residuales + pluviales + eyectores)</td><td>—</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E65</td><td>Eléctrica</td><td>Memoria cálculo eléctrico (cargas + protecciones)</td><td>AYM</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E66</td><td>Apantallamiento</td><td>Memoria análisis electrogeométrico</td><td>AYM</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E67</td><td>Iluminación</td><td>Memoria fotométrica AYM <strong>(529 folios)</strong></td><td>AYM</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E68</td><td>TDT/Telecom</td><td>Memoria infraestructura TDT <strong>(25 folios)</strong></td><td>AYM</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E69</td><td>Gas natural</td><td>Memoria diseño y cálculo gas natural</td><td>CH INGENIEROS</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E71</td><td>RCI</td><td>Memoria cálculo sistema RCI</td><td>—</td><td><span class="badge critico">Crítico</span></td></tr>
         </tbody>
       </table>
     </div>
     <div class="scroll-hint">↔ Desliza horizontalmente la tabla</div>
   </div>
 
-  <!-- HALLAZGOS CRÍTICOS -->
+  <!-- SECCIÓN 5: HALLAZGOS CRÍTICOS -->
   <div class="section-title"><div class="num">5</div><h2>Hallazgos críticos adicionales</h2></div>
 
   <div class="card">
     <div class="table-wrap">
-      <table class="data-table">
+      <table>
         <thead>
           <tr><th>ID</th><th>Documento</th><th>Evidencia</th><th>Nivel</th></tr>
         </thead>
         <tbody>
-          <tr><td>G01-G03</td><td>Licencias Res 212, 354, 379 (PDF suelto)</td><td>Solo aparecen como sello en planos</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E01</td><td>Estudio de suelos</td><td>Obligatorio NSR-10 Título H — no aparece</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E02</td><td>Memoria de cálculo estructural</td><td>Solo planos sin memoria — NSR-10 Títulos A-D</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E03</td><td>Control de asentamientos</td><td>NSR-10 Título H + Ley 400/1997</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E13</td><td>Calibración acueducto EPZ</td><td>206 de 960 (21,5%) — <strong>faltan 754</strong></td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E24</td><td>Certificados RETIE por torre</td><td>Faltan T4, T5, T6, T8</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
-          <tr><td>E25</td><td>Certificados RITEL por torre</td><td>Faltan T4, T5, T6, T7, T8</td><td><span class="riesgo alto">ALTO</span></td></tr>
-          <tr><td>E47</td><td>Hojas de vida ascensores</td><td>10 de 23 sin documentación (Ley 1209/2008)</td><td><span class="riesgo alto">ALTO</span></td></tr>
-          <tr><td>N10</td><td>Comodato Ludoteca AR Fundación</td><td>Art. 46 RPH — contrato no aparece</td><td><span class="riesgo medio">MEDIO</span></td></tr>
-          <tr><td>E16</td><td>Lavado e impermeabilización tanques</td><td>Carpeta 4.1.3 vacía — Res 4145/2014</td><td><span class="riesgo alto">ALTO</span></td></tr>
+          <tr><td>G01-G03</td><td>Licencias Res 212, 354, 379 (PDF suelto)</td><td>Solo aparecen como sello en planos</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E01</td><td>Estudio de suelos</td><td>Obligatorio NSR-10 Título H — no aparece</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E02</td><td>Memoria de cálculo estructural</td><td>Solo planos sin memoria — NSR-10 Títulos A-D</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E03</td><td>Control de asentamientos</td><td>NSR-10 Título H + Ley 400/1997</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E13</td><td>Calibración acueducto EPZ</td><td>206 de 960 (21,5%) — <strong>faltan 754</strong></td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E24</td><td>Certificados RETIE por torre</td><td>Faltan T4, T5, T6, T8</td><td><span class="badge critico">Crítico</span></td></tr>
+          <tr><td>E25</td><td>Certificados RITEL por torre</td><td>Faltan T4, T5, T6, T7, T8</td><td><span class="badge alto">Alto</span></td></tr>
+          <tr><td>E47</td><td>Hojas de vida ascensores</td><td>10 de 23 sin documentación (Ley 1209/2008)</td><td><span class="badge alto">Alto</span></td></tr>
+          <tr><td>N10</td><td>Comodato Ludoteca AR Fundación</td><td>Art. 46 RPH — contrato no aparece</td><td><span class="badge medio">Medio</span></td></tr>
+          <tr><td>E16</td><td>Lavado e impermeabilización tanques</td><td>Carpeta 4.1.3 vacía — Res 4145/2014</td><td><span class="badge alto">Alto</span></td></tr>
         </tbody>
       </table>
     </div>
     <div class="scroll-hint">↔ Desliza horizontalmente la tabla</div>
   </div>
 
-  <!-- ETAPAS -->
+  <!-- SECCIÓN 6: ETAPAS -->
   <div class="section-title"><div class="num">6</div><h2>Etapas operativas de entrega</h2></div>
 
-  <div class="card">
+  <div class="card gold">
     <p>El RPH declara una única etapa legal. Sin embargo, la entrega física se realizó en cuatro etapas operativas entre diciembre de 2023 y diciembre de 2025:</p>
     <div class="timeline">
       <div class="timeline-item">
@@ -644,7 +743,7 @@
     </div>
   </div>
 
-  <!-- CONCEPTO VIABILIDAD -->
+  <!-- SECCIÓN 7: VIABILIDAD -->
   <div class="section-title"><div class="num">7</div><h2>Viabilidad de recibo</h2></div>
 
   <div class="alert critico">
@@ -663,16 +762,16 @@
     </ul>
   </div>
 
-  <div class="alert info">
+  <div class="callout">
     <strong>Recomendación a la copropiedad</strong>
     Abstenerse de manera expresa de suscribir actas de recibo definitivo mientras persistan los vacíos críticos. Continuar el requerimiento formal al constructor y consolidar evidencia para eventuales acciones legales, audiencias de conciliación o procesos de arreglo directo.
   </div>
 
-  <!-- ANÁLISIS DE RIESGOS -->
+  <!-- SECCIÓN 8: ANÁLISIS DE RIESGOS -->
   <div class="section-title"><div class="num">8</div><h2>Análisis de riesgos</h2></div>
 
   <div class="grid-2">
-    <div class="card">
+    <div class="card red">
       <h3>🔧 Riesgo técnico</h3>
       <ul class="recomendaciones-lista">
         <li>Incertidumbre sobre la capacidad estructural real frente a eventos sísmicos y cargas vivas.</li>
@@ -680,7 +779,7 @@
         <li>Dificultad para adelantar mantenimiento adecuado por falta de parámetros de diseño.</li>
       </ul>
     </div>
-    <div class="card">
+    <div class="card amber">
       <h3>⚖️ Riesgo jurídico</h3>
       <ul class="recomendaciones-lista">
         <li>Incumplimiento frente a las licencias de construcción (Res 212/2022, 354/2023, 379/2023).</li>
@@ -688,7 +787,7 @@
         <li>Entrega incompleta de bienes comunes — régimen de la Ley 675/2001.</li>
       </ul>
     </div>
-    <div class="card">
+    <div class="card gold">
       <h3>💰 Riesgo económico</h3>
       <ul class="recomendaciones-lista">
         <li>Costos adicionales de diagnóstico futuro (estudios ex-post, memorias reconstructivas, ensayos).</li>
@@ -696,7 +795,7 @@
         <li>Dificultad en la valorización del activo inmobiliario.</li>
       </ul>
     </div>
-    <div class="card">
+    <div class="card dark">
       <h3>⚙️ Riesgo operativo</h3>
       <ul class="recomendaciones-lista">
         <li>Imposibilidad de operar adecuadamente los sistemas técnicos por ausencia de manuales y memorias.</li>
@@ -706,10 +805,10 @@
     </div>
   </div>
 
-  <!-- HITO DE PAGO -->
+  <!-- SECCIÓN 9: HITO -->
   <div class="section-title"><div class="num">9</div><h2>Cumplimiento del entregable contractual</h2></div>
 
-  <div class="card">
+  <div class="card green">
     <p>La radicación formal de este informe en la plataforma SaaS IHC constituye el entregable correspondiente a la <strong>Fase 1 — Diagnóstico Documental</strong>, en cumplimiento del alcance contractual previsto en el contrato <strong>ZCIHC-032-SALINAS-2</strong>, configurando el cierre del <strong>Hito 2</strong> conforme a la cláusula de forma de pago del contrato.</p>
     <div class="alert success" style="margin-top: 0.8rem;">
       <strong>✓ Hito 2 cumplido</strong>
@@ -717,11 +816,11 @@
     </div>
   </div>
 
-  <!-- PRÓXIMOS PASOS -->
+  <!-- SECCIÓN 10: PRÓXIMOS PASOS -->
   <div class="section-title"><div class="num">10</div><h2>Próximos pasos</h2></div>
 
   <div class="card">
-    <div class="riesgo-h alta">Prioridad ALTA</div>
+    <span class="riesgo-h alta">Prioridad ALTA</span>
     <ol class="numbered">
       <li>Solicitar las 9 memorias de cálculo faltantes (E62-E71).</li>
       <li>Solicitar los 3 documentos estructurales NSR-10 (E01, E02, E03).</li>
@@ -733,7 +832,7 @@
       <li>Solicitar Acta No. 138 y aclaración de las 6 actas con versiones alternativas.</li>
     </ol>
 
-    <div class="riesgo-h media">Prioridad MEDIA</div>
+    <span class="riesgo-h media">Prioridad MEDIA</span>
     <ol class="numbered">
       <li>Completar documentación del sistema de detección incendios por torre.</li>
       <li>Completar planos gas VANTI por torre.</li>
@@ -743,7 +842,7 @@
       <li>Solicitar versión actualizada del Cuadro de Control de entregas.</li>
     </ol>
 
-    <div class="riesgo-h baja">Prioridad BAJA</div>
+    <span class="riesgo-h baja">Prioridad BAJA</span>
     <ol class="numbered">
       <li>Coordinar con ENEL la inspección de la subestación y redes internas.</li>
       <li>Solicitar historial de liquidaciones de expensas 2023-2025.</li>
@@ -753,7 +852,7 @@
     </ol>
   </div>
 
-  <!-- USO COMO SOPORTE -->
+  <!-- SECCIÓN 11: USO COMO SOPORTE -->
   <div class="section-title"><div class="num">11</div><h2>Uso como soporte de reclamación</h2></div>
 
   <div class="card">
@@ -780,7 +879,7 @@
         <span>Defensa patrimonial</span>
       </div>
     </div>
-    <div class="alert info" style="margin-top: 1rem;">
+    <div class="callout">
       El presente informe constituye <strong>medio de prueba documental idóneo</strong> dentro del proceso de defensa patrimonial de la copropiedad.
     </div>
   </div>
@@ -794,9 +893,25 @@
 </footer>
 
 <script>
-  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  // Paleta IHC para gráficos
+  const IHC = {
+    brandDark: '#420049',
+    brandPrimary: '#9600C1',
+    brandLight: '#C964FF',
+    gold: '#D4A020',
+    goldSoft: '#F0D080',
+    green: '#1E7A4A',
+    amber: '#C47800',
+    red: '#B83030',
+    purple: '#6D00A0',
+    muted: '#6B5B7B',
+    surface: '#F2EDF8',
+    border: '#E0D5EC'
+  };
+
+  Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif';
   Chart.defaults.font.size = 11;
-  Chart.defaults.color = '#4a5568';
+  Chart.defaults.color = IHC.muted;
   Chart.defaults.maintainAspectRatio = false;
   Chart.defaults.responsive = true;
 
@@ -811,7 +926,7 @@
       labels: ['Completo (33)', 'Parcial (19)', 'Faltante (20)', 'Por Verificar (36)', 'Pendiente (1)'],
       datasets: [{
         data: [33, 19, 20, 36, 1],
-        backgroundColor: ['#38a169', '#d69e2e', '#c53030', '#4299e1', '#a0aec0'],
+        backgroundColor: [IHC.green, IHC.amber, IHC.red, IHC.brandPrimary, IHC.muted],
         borderColor: '#fff',
         borderWidth: 2
       }]
@@ -821,14 +936,12 @@
       plugins: {
         legend: {
           position: 'bottom',
-          labels: {
-            padding: 10,
-            usePointStyle: true,
-            font: { size: legendFontSize },
-            boxWidth: 8
-          }
+          labels: { padding: 10, usePointStyle: true, font: { size: legendFontSize }, boxWidth: 8 }
         },
         tooltip: {
+          backgroundColor: IHC.brandDark,
+          titleColor: '#fff',
+          bodyColor: '#fff',
           callbacks: {
             label: ctx => {
               const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
@@ -849,8 +962,8 @@
       datasets: [{
         label: 'Ítems',
         data: [17, 16, 5, 2],
-        backgroundColor: ['#c53030', '#dd6b20', '#d69e2e', '#38a169'],
-        borderRadius: 6,
+        backgroundColor: [IHC.red, IHC.amber, IHC.gold, IHC.green],
+        borderRadius: 4,
         borderSkipped: false
       }]
     },
@@ -858,12 +971,17 @@
       indexAxis: 'y',
       plugins: {
         legend: { display: false },
-        tooltip: { callbacks: { label: ctx => `${ctx.parsed.x} ítems` } }
+        tooltip: {
+          backgroundColor: IHC.brandDark,
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          callbacks: { label: ctx => `${ctx.parsed.x} ítems` }
+        }
       },
       scales: {
         x: {
           beginAtZero: true,
-          grid: { color: '#e2e8f0' },
+          grid: { color: IHC.border },
           ticks: { stepSize: 5, font: { size: tickFontSize } }
         },
         y: {
@@ -898,9 +1016,9 @@
         label: '% cumplimiento',
         data: catData.map(d => d.pct),
         backgroundColor: catData.map(d =>
-          d.pct >= 70 ? '#38a169' :
-          d.pct >= 40 ? '#d69e2e' :
-          d.pct >= 20 ? '#dd6b20' : '#c53030'
+          d.pct >= 70 ? IHC.green :
+          d.pct >= 40 ? IHC.gold :
+          d.pct >= 20 ? IHC.amber : IHC.red
         ),
         borderRadius: 4
       }]
@@ -910,6 +1028,9 @@
       plugins: {
         legend: { display: false },
         tooltip: {
+          backgroundColor: IHC.brandDark,
+          titleColor: '#fff',
+          bodyColor: '#fff',
           callbacks: {
             label: ctx => {
               const d = catData[ctx.dataIndex];
@@ -922,7 +1043,7 @@
         x: {
           beginAtZero: true,
           max: 100,
-          grid: { color: '#e2e8f0' },
+          grid: { color: IHC.border },
           ticks: { callback: v => v + '%', font: { size: tickFontSize } }
         },
         y: {
@@ -944,14 +1065,16 @@
         {
           label: 'Presentes',
           data: cert,
-          backgroundColor: cert.map(c => c === 96 ? '#38a169' : c > 0 ? '#dd6b20' : '#c53030'),
+          backgroundColor: cert.map(c => c === 96 ? IHC.green : c > 0 ? IHC.amber : IHC.red),
           borderRadius: 4,
           stack: 'a'
         },
         {
           label: 'Faltantes',
           data: cert.map(c => 96 - c),
-          backgroundColor: '#e2e8f0',
+          backgroundColor: IHC.surface,
+          borderColor: IHC.border,
+          borderWidth: 1,
           borderRadius: 4,
           stack: 'a'
         }
@@ -963,7 +1086,12 @@
           position: 'bottom',
           labels: { padding: 10, usePointStyle: true, font: { size: legendFontSize }, boxWidth: 8 }
         },
-        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}` } }
+        tooltip: {
+          backgroundColor: IHC.brandDark,
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}` }
+        }
       },
       scales: {
         x: { stacked: true, grid: { display: false }, ticks: { font: { size: tickFontSize } } },
@@ -971,9 +1099,9 @@
           stacked: true,
           beginAtZero: true,
           max: 96,
-          grid: { color: '#e2e8f0' },
+          grid: { color: IHC.border },
           ticks: { font: { size: tickFontSize } },
-          title: { display: !isMobile, text: 'Apartamentos', font: { size: 11 } }
+          title: { display: !isMobile, text: 'Apartamentos', font: { size: 11 }, color: IHC.muted }
         }
       }
     }
@@ -993,13 +1121,13 @@
         {
           label: 'RETIE',
           data: retieData.map(d => d.retie),
-          backgroundColor: retieData.map(d => d.retie ? '#38a169' : '#c53030'),
+          backgroundColor: retieData.map(d => d.retie ? IHC.green : IHC.red),
           borderRadius: 4
         },
         {
           label: 'RITEL',
           data: retieData.map(d => d.ritel),
-          backgroundColor: retieData.map(d => d.ritel ? '#38a169' : '#c53030'),
+          backgroundColor: retieData.map(d => d.ritel ? IHC.green : IHC.red),
           borderRadius: 4
         }
       ]
@@ -1011,6 +1139,9 @@
           labels: { padding: 10, usePointStyle: true, font: { size: legendFontSize }, boxWidth: 8 }
         },
         tooltip: {
+          backgroundColor: IHC.brandDark,
+          titleColor: '#fff',
+          bodyColor: '#fff',
           callbacks: {
             label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y ? 'Presente ✓' : 'Ausente ✗'}`
           }
@@ -1026,7 +1157,7 @@
             callback: v => v === 1 ? 'Sí' : v === 0 ? 'No' : '',
             font: { size: tickFontSize }
           },
-          grid: { color: '#e2e8f0' }
+          grid: { color: IHC.border }
         }
       }
     }
