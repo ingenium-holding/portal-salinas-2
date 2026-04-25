@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe Diagnóstico Documental V1 — Salinas 2</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #1e3a5f;
+    --primary-light: #2c5282;
+    --accent: #d69e2e;
+    --critico: #c53030;
+    --alto: #dd6b20;
+    --medio: #d69e2e;
+    --bajo: #38a169;
+    --gris-claro: #f7fafc;
+    --gris-medio: #e2e8f0;
+    --gris-oscuro: #4a5568;
+    --texto: #1a202c;
+    --exito: #38a169;
+    --parcial: #d69e2e;
+    --faltante: #c53030;
+    --verificar: #4299e1;
+    --pendiente: #a0aec0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--gris-claro);
+    color: var(--texto);
+    line-height: 1.6;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+  .header h1 { font-size: 2.2rem; margin-bottom: 0.5rem; font-weight: 700; }
+  .header h2 { font-size: 1.3rem; font-weight: 400; opacity: 0.95; margin-bottom: 0.3rem; }
+  .header .subtitle { font-size: 1rem; opacity: 0.85; letter-spacing: 1px; }
+  .header .version { display: inline-block; margin-top: 1rem; padding: 0.3rem 1rem; background: rgba(255,255,255,0.15); border-radius: 4px; font-size: 0.9rem; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+  .card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 1.5rem;
+  }
+  .card h3 {
+    color: var(--primary);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--gris-medio);
+  }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .kpi-box {
+    background: white;
+    border-left: 4px solid var(--primary);
+    padding: 1.2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+  }
+  .kpi-box.critico { border-left-color: var(--critico); }
+  .kpi-box.alto { border-left-color: var(--alto); }
+  .kpi-box.exito { border-left-color: var(--exito); }
+  .kpi-box.info { border-left-color: var(--verificar); }
+  .kpi-label { font-size: 0.85rem; color: var(--gris-oscuro); margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-value { font-size: 2.2rem; font-weight: 700; color: var(--primary); line-height: 1; }
+  .kpi-unit { font-size: 0.85rem; color: var(--gris-oscuro); margin-top: 0.3rem; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+  .chart-container { position: relative; height: 340px; }
+  .chart-container.tall { height: 420px; }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+  }
+  .data-table th {
+    background: var(--primary);
+    color: white;
+    padding: 0.7rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .data-table td {
+    padding: 0.65rem 0.7rem;
+    border-bottom: 1px solid var(--gris-medio);
+    vertical-align: top;
+  }
+  .data-table tr:nth-child(even) td { background: var(--gris-claro); }
+  .data-table tr:hover td { background: #edf2f7; }
+  .riesgo {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: white;
+  }
+  .riesgo.critico { background: var(--critico); }
+  .riesgo.alto { background: var(--alto); }
+  .riesgo.medio { background: var(--medio); }
+  .riesgo.bajo { background: var(--bajo); }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  .info-grid .label { font-weight: 600; color: var(--gris-oscuro); }
+  .alert {
+    padding: 1rem 1.2rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    border-left: 4px solid;
+  }
+  .alert.critico { background: #fed7d7; border-left-color: var(--critico); color: #742a2a; }
+  .alert.info { background: #bee3f8; border-left-color: var(--verificar); color: #2c5282; }
+  .alert.success { background: #c6f6d5; border-left-color: var(--exito); color: #22543d; }
+  .alert strong { display: block; margin-bottom: 0.3rem; font-size: 1rem; }
+  .timeline { position: relative; padding-left: 2rem; margin: 1rem 0; }
+  .timeline::before { content:''; position: absolute; left: 0.5rem; top: 0; bottom: 0; width: 3px; background: var(--gris-medio); }
+  .timeline-item { position: relative; margin-bottom: 1.2rem; }
+  .timeline-item::before { content:''; position: absolute; left: -1.7rem; top: 0.4rem; width: 13px; height: 13px; border-radius: 50%; background: var(--primary); border: 2px solid white; box-shadow: 0 0 0 2px var(--primary); }
+  .timeline-item .date { font-weight: 700; color: var(--primary); font-size: 0.9rem; }
+  .timeline-item .title { font-weight: 600; margin: 0.2rem 0; }
+  .timeline-item .desc { font-size: 0.85rem; color: var(--gris-oscuro); }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--gris-oscuro);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--gris-medio);
+    margin-top: 2rem;
+    background: white;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 3px solid var(--primary);
+  }
+  .section-title .num {
+    width: 2.2rem; height: 2.2rem;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .section-title h2 { font-size: 1.5rem; color: var(--primary); }
+  .tag {
+    display: inline-block;
+    background: var(--gris-medio);
+    padding: 0.15rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-right: 0.3rem;
+  }
+  .recomendaciones-lista { list-style: none; padding: 0; }
+  .recomendaciones-lista li {
+    padding: 0.7rem 0 0.7rem 2rem;
+    position: relative;
+    border-bottom: 1px solid var(--gris-medio);
+  }
+  .recomendaciones-lista li:last-child { border-bottom: none; }
+  .recomendaciones-lista li::before {
+    content:'▸';
+    position: absolute;
+    left: 0.5rem;
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--primary);
+    color: white;
+  }
+  @media print {
+    .header { background: var(--primary) !important; -webkit-print-color-adjust: exact; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <h1>Informe de Diagnóstico de Completitud Documental</h1>
+  <h2>Conjunto Residencial Salinas 2 — Propiedad Horizontal</h2>
+  <div class="subtitle">Vivienda de Interés Social</div>
+  <div class="subtitle">Contrato ZCIHC-032-SALINAS-2</div>
+  <span class="version">Versión 1.0 · Abril 2026</span>
+</header>
+
+<div class="container">
+
+  <!-- DATOS CLAVE -->
+  <div class="card">
+    <h3>📋 Datos del Proyecto</h3>
+    <div class="info-grid">
+      <div class="label">Código contrato</div><div>ZCIHC-032-SALINAS-2</div>
+      <div class="label">Constructor</div><div>AR CONSTRUCCIONES S.A.S. (NIT 900.378.893-8)</div>
+      <div class="label">Contratante</div><div>Conjunto Residencial Salinas 2 P.H. (NIT 901.792.724-1)</div>
+      <div class="label">Consultor</div><div>INGENIUM HOLDING CORP SAS (NIT 901.180.391-4)</div>
+      <div class="label">Matrícula</div><div>176-207800 — Escritura Pública 5.070/2023 (Notaría 27 Bogotá)</div>
+      <div class="label">Dirección</div><div>Carrera 17 # 30-141, Zipaquirá, Cundinamarca</div>
+      <div class="label">Composición</div><div>10 torres × 12 pisos = 960 apartamentos VIS + 8 locales comerciales + 1.152 parqueaderos</div>
+      <div class="label">Área del lote</div><div>18.605,65 m² (Lote Útil Manzana #2 del UAU Las Mercedes)</div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-box info">
+      <div class="kpi-label">Archivos recibidos</div>
+      <div class="kpi-value">655</div>
+      <div class="kpi-unit">2,43 GB en 2 lotes</div>
+    </div>
+    <div class="kpi-box exito">
+      <div class="kpi-label">Clasificados IHC</div>
+      <div class="kpi-value">646</div>
+      <div class="kpi-unit">100% del acervo relevante</div>
+    </div>
+    <div class="kpi-box info">
+      <div class="kpi-label">Ítems índice IHC</div>
+      <div class="kpi-value">109</div>
+      <div class="kpi-unit">cruzados con el acervo</div>
+    </div>
+    <div class="kpi-box critico">
+      <div class="kpi-label">Brecha obligatoria</div>
+      <div class="kpi-value">39</div>
+      <div class="kpi-unit">ítems con brecha documental</div>
+    </div>
+    <div class="kpi-box critico">
+      <div class="kpi-label">Memorias faltantes</div>
+      <div class="kpi-value">10</div>
+      <div class="kpi-unit">4 especialidades clave</div>
+    </div>
+    <div class="kpi-box alto">
+      <div class="kpi-label">Calibración acueducto</div>
+      <div class="kpi-value">21,5%</div>
+      <div class="kpi-unit">206 de 960 apartamentos</div>
+    </div>
+  </div>
+
+  <!-- GRÁFICOS: DISTRIBUCIÓN -->
+  <div class="section-title"><div class="num">1</div><h2>Estado general del acervo documental</h2></div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Distribución por estado (109 ítems)</h3>
+      <div class="chart-container"><canvas id="chartEstado"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Ítems con brecha por Nivel de Riesgo</h3>
+      <div class="chart-container"><canvas id="chartRiesgo"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CATEGORÍAS -->
+  <div class="section-title"><div class="num">2</div><h2>Nivel de cumplimiento documental por categoría</h2></div>
+
+  <div class="card">
+    <div class="chart-container tall"><canvas id="chartCategorias"></canvas></div>
+  </div>
+
+  <div class="alert critico">
+    <strong>Categorías con 0% de cumplimiento:</strong>
+    PLANEACIÓN, Red de Gas y Ascensores concentran la mayor brecha documental del proyecto, seguidas por Estructura (13%) y Amenidades (15%).
+  </div>
+
+  <!-- COBERTURA POR TORRE -->
+  <div class="section-title"><div class="num">3</div><h2>Cobertura por torre (certificaciones críticas)</h2></div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Certificados calibración acueducto EPZ</h3>
+      <div class="chart-container"><canvas id="chartAcueducto"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Certificaciones RETIE / RITEL por torre</h3>
+      <div class="chart-container"><canvas id="chartRetie"></canvas></div>
+    </div>
+  </div>
+
+  <div class="alert critico">
+    <strong>Hallazgo crítico — acueducto:</strong>
+    Solo Torre 1 y Torre 2 cuentan con certificados de calibración completos (96 de 96 apartamentos). Faltan 754 certificados distribuidos en las torres 3, 4, 5, 6, 7, 8, 9 y 10.
+  </div>
+
+  <!-- MEMORIAS FALTANTES -->
+  <div class="section-title"><div class="num">4</div><h2>Memorias de cálculo faltantes</h2></div>
+
+  <div class="card">
+    <p style="margin-bottom: 1rem;">El índice oficial del constructor declara dos memorias AYM que suman <strong>554 folios</strong> y que nunca fueron entregadas. Adicionalmente, no aparecen memorias propias de otras especialidades clave del proyecto.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Especialidad</th><th>Memoria</th><th>Diseñador declarado</th><th>Nivel</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>E62</td><td>Estructural</td><td>Memoria cálculo estructural complementaria</td><td>GIHON INGENIERÍA SAS</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E63</td><td>Hidráulica</td><td>Memoria hidráulica (suministro + RCI + bombeo)</td><td>—</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E64</td><td>Sanitaria</td><td>Memoria sanitaria (residuales + pluviales + eyectores)</td><td>—</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E65</td><td>Eléctrica</td><td>Memoria cálculo eléctrico (cargas + protecciones)</td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E66</td><td>Apantallamiento</td><td>Memoria análisis electrogeométrico</td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E67</td><td>Iluminación</td><td>Memoria fotométrica AYM <strong>(529 folios declarados)</strong></td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E68</td><td>TDT/Telecom</td><td>Memoria infraestructura soporte y TDT <strong>(25 folios)</strong></td><td>AYM</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E69</td><td>Gas natural</td><td>Memoria diseño y cálculo gas natural</td><td>CH INGENIEROS ARQUITECTOS SAS</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E71</td><td>RCI</td><td>Memoria cálculo sistema RCI (hidráulica + detección)</td><td>—</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- HALLAZGOS CRÍTICOS -->
+  <div class="section-title"><div class="num">5</div><h2>Hallazgos críticos adicionales</h2></div>
+
+  <div class="card">
+    <table class="data-table">
+      <thead>
+        <tr><th>ID</th><th>Documento</th><th>Evidencia</th><th>Nivel</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>G01-G03</td><td>Licencias Res 212, 354, 379 en PDF suelto</td><td>Solo aparecen como sello en planos</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E01</td><td>Estudio de suelos</td><td>No aparece en el acervo — obligatorio NSR-10 Título H</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E02</td><td>Memoria de cálculo estructural</td><td>Solo hay planos, sin memoria soporte — NSR-10 Títulos A-D</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E03</td><td>Control de asentamientos</td><td>No aparece — NSR-10 Título H + Ley 400/1997</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E13</td><td>Certificados calibración acueducto EPZ</td><td>206 de 960 (21,5%) — <strong>faltan 754 certificados</strong></td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E24</td><td>Certificados RETIE por torre</td><td>Faltan T4, T5, T6, T8 (4 torres sin certificación)</td><td><span class="riesgo critico">CRÍTICO</span></td></tr>
+        <tr><td>E25</td><td>Certificados RITEL por torre</td><td>Faltan T4, T5, T6, T7, T8 (5 torres sin certificación)</td><td><span class="riesgo alto">ALTO</span></td></tr>
+        <tr><td>E47</td><td>Hojas de vida ascensores (Ley 1209/2008)</td><td>10 de 23 ascensores sin documentación individual</td><td><span class="riesgo alto">ALTO</span></td></tr>
+        <tr><td>N10</td><td>Contrato comodato Ludoteca AR Fundación</td><td>Art. 46 RPH — contrato formal no aparece</td><td><span class="riesgo medio">MEDIO</span></td></tr>
+        <tr><td>E16</td><td>Lavado e impermeabilización tanques</td><td>Carpeta 4.1.3 vacía — Res 4145/2014</td><td><span class="riesgo alto">ALTO</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ETAPAS -->
+  <div class="section-title"><div class="num">6</div><h2>Etapas operativas de entrega</h2></div>
+
+  <div class="card">
+    <p style="margin-bottom: 1rem;">El Reglamento de Propiedad Horizontal declara una única etapa legal. Sin embargo, la entrega física se realizó en cuatro etapas operativas entre diciembre de 2023 y diciembre de 2025:</p>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="date">Diciembre 2023 — 2024</div>
+        <div class="title">Etapa 1: Torres 1 y 2 + comunes esenciales</div>
+        <div class="desc">Administradora receptora: Claudia Arguello (administración provisional). Cobertura documental <strong>100%</strong> en certificados de calibración acueducto.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">2024</div>
+        <div class="title">Etapa 1B: Torres 3 y 4</div>
+        <div class="desc">Cobertura parcial (6 y 4 certificados). Empieza brecha severa de calibración.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">2024 — 2025</div>
+        <div class="title">Etapa 2: Torre 5 + Torres 9 y 10</div>
+        <div class="desc">Administradora: Laura Reyes (SERVINTCORP). Torre 5 sin certificados; T9 y T10 con 1 certificado cada una.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="date">Noviembre — Diciembre 2025</div>
+        <div class="title">Etapa Final: Torres 6, 7 y 8 + amenidades</div>
+        <div class="desc">Administradora: Deisy Figueredo (SERVINTCORP). Incluye piscina, BBQ, parque, gimnasio, biosaludable, zona PET, planta eléctrica y subestación. <strong>Garantías de acabados aún vigentes.</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCEPTO VIABILIDAD -->
+  <div class="section-title"><div class="num">7</div><h2>Concepto sobre la viabilidad de recibo</h2></div>
+
+  <div class="alert critico">
+    <strong>El estado actual de la documentación NO PERMITE el recibo técnico definitivo de las zonas comunes del proyecto.</strong>
+    Persisten vacíos críticos de información que afectan la verificación de condiciones de seguridad, calidad y cumplimiento normativo.
+  </div>
+
+  <div class="card">
+    <h3>Requisitos previos para un eventual recibo condicionado</h3>
+    <ul class="recomendaciones-lista">
+      <li>Entrega de la totalidad de memorias de cálculo de todas las especialidades (estructural, hidráulica, sanitaria, eléctrica, apantallamiento, fotométrica, telecomunicaciones, gas natural y RCI).</li>
+      <li>Entrega del estudio de suelos, memoria de cálculo estructural y control de asentamientos conforme a NSR-10 Título H y Ley 400 de 1997.</li>
+      <li>Certificación RETIE y RITEL de la totalidad de las diez (10) torres del conjunto.</li>
+      <li>Entrega completa de los certificados de calibración de acueducto EPZ de los 960 apartamentos.</li>
+      <li>Formalización de los documentos jurídicos faltantes: PDFs sueltos de las licencias y contrato de comodato de la Ludoteca con AR Fundación.</li>
+    </ul>
+  </div>
+
+  <div class="alert info">
+    <strong>Recomendación a la copropiedad:</strong>
+    Abstenerse de manera expresa de suscribir actas de recibo definitivo mientras persistan los vacíos críticos. Continuar el proceso de requerimiento formal al constructor y consolidar evidencia documental para eventuales acciones legales, audiencias de conciliación o procesos de arreglo directo.
+  </div>
+
+  <!-- ANÁLISIS DE RIESGOS -->
+  <div class="section-title"><div class="num">8</div><h2>Análisis de riesgos</h2></div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>🔧 Riesgo técnico</h3>
+      <ul class="recomendaciones-lista">
+        <li>Incertidumbre sobre la capacidad estructural real frente a eventos sísmicos y cargas vivas.</li>
+        <li>Posibles fallas no detectadas en sistemas críticos: RCI, tableros eléctricos, bombas de presión, eyectores, ascensores.</li>
+        <li>Dificultad para adelantar mantenimiento adecuado por falta de parámetros de diseño y fichas técnicas.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>⚖️ Riesgo jurídico</h3>
+      <ul class="recomendaciones-lista">
+        <li>Incumplimiento frente a las licencias de construcción (Res 212/2022, 354/2023, 379/2023).</li>
+        <li>Vulneración del deber de calidad, idoneidad y seguridad — Ley 1480 de 2011.</li>
+        <li>Entrega incompleta de bienes comunes frente al régimen de la Ley 675 de 2001.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>💰 Riesgo económico</h3>
+      <ul class="recomendaciones-lista">
+        <li>Costos adicionales de diagnóstico futuro (estudios ex-post, memorias reconstructivas, ensayos no destructivos).</li>
+        <li>Intervenciones correctivas no previstas en el presupuesto operativo.</li>
+        <li>Dificultad en la valorización del activo inmobiliario frente a avalúos y futuras enajenaciones.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>⚙️ Riesgo operativo</h3>
+      <ul class="recomendaciones-lista">
+        <li>Imposibilidad de operar adecuadamente los sistemas técnicos por ausencia de manuales y memorias.</li>
+        <li>Dependencia del constructor para obtener información básica de la copropiedad.</li>
+        <li>Falta de trazabilidad para contratar mantenimientos con proveedores externos.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- HITO DE PAGO -->
+  <div class="section-title"><div class="num">9</div><h2>Cumplimiento del entregable contractual</h2></div>
+
+  <div class="card">
+    <p>La radicación formal de este informe en la plataforma SaaS IHC constituye el entregable correspondiente a la <strong>Fase 1 — Diagnóstico Documental</strong>, en cumplimiento del alcance contractual previsto en el contrato <strong>ZCIHC-032-SALINAS-2</strong>, configurando el cierre del <strong>Hito 2</strong> conforme a la cláusula de forma de pago del contrato.</p>
+    <div class="alert success" style="margin-top: 1rem;">
+      <strong>✓ Hito 2 cumplido</strong>
+      Entrega del Informe de Diagnóstico Documental a la copropiedad, con su respectivo soporte técnico-jurídico y radicación trazable en la plataforma SaaS IHC conforme a la Ley 527/1999 y el Decreto 2364/2012.
+    </div>
+  </div>
+
+  <!-- PRÓXIMOS PASOS -->
+  <div class="section-title"><div class="num">10</div><h2>Próximos pasos recomendados</h2></div>
+
+  <div class="card">
+    <h3 style="color: var(--critico);">Prioridad ALTA</h3>
+    <ol style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+      <li>Solicitar las 9 memorias de cálculo faltantes (E62-E71).</li>
+      <li>Solicitar los 3 documentos estructurales base NSR-10 (E01, E02, E03).</li>
+      <li>Solicitar los 754 certificados de calibración de acueducto EPZ faltantes.</li>
+      <li>Solicitar certificaciones RETIE de T4, T5, T6, T8 y RITEL de T4, T5, T6, T7, T8.</li>
+      <li>Solicitar hojas de vida de los 10 ascensores faltantes (Ley 1209/2008).</li>
+      <li>Solicitar contrato de comodato de la Ludoteca con AR Fundación (Art. 46 RPH).</li>
+      <li>Solicitar PDFs sueltos de las licencias Res 212/2022, 354/2023 y 379/2023.</li>
+      <li>Solicitar Acta No. 138 faltante y aclaración de las 6 actas con versiones alternativas.</li>
+    </ol>
+
+    <h3 style="color: var(--alto);">Prioridad MEDIA</h3>
+    <ol style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+      <li>Completar documentación del sistema de detección incendios por torre.</li>
+      <li>Completar planos gas VANTI con diseños por torre.</li>
+      <li>Solicitar dossier de lavado e impermeabilización de tanques.</li>
+      <li>Solicitar fichas técnicas y certificados de equipos POOL SECURITY.</li>
+      <li>Solicitar versión actualizada del Manual del Administrador para las 10 torres.</li>
+      <li>Solicitar versión actualizada del Cuadro de Control de entregas.</li>
+    </ol>
+
+    <h3 style="color: var(--bajo);">Prioridad BAJA</h3>
+    <ol style="padding-left: 1.5rem;">
+      <li>Coordinar con ENEL COLOMBIA la inspección técnica de la subestación y redes internas.</li>
+      <li>Solicitar historial de liquidaciones de expensas 2023-2025.</li>
+      <li>Verificar estado de liberación de la hipoteca abierta con Banco Davivienda.</li>
+      <li>Evaluar jurídicamente la vigencia de la facultad del constructor para modificar coeficientes.</li>
+      <li>Verificar en inspección física los 36 ítems marcados como POR VERIFICAR.</li>
+    </ol>
+  </div>
+
+  <!-- USO COMO SOPORTE -->
+  <div class="section-title"><div class="num">11</div><h2>Uso del informe como soporte de reclamación</h2></div>
+
+  <div class="card">
+    <p style="margin-bottom: 1rem;">El presente informe constituye un documento técnico–jurídico que puede ser utilizado como soporte para:</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem;">
+      <div style="padding: 1rem; background: var(--gris-claro); border-radius: 6px; border-left: 3px solid var(--primary);">
+        <strong style="color: var(--primary); display: block; margin-bottom: 0.3rem;">Requerimientos formales</strong>
+        <span style="font-size: 0.85rem;">Al constructor AR CONSTRUCCIONES S.A.S.</span>
+      </div>
+      <div style="padding: 1rem; background: var(--gris-claro); border-radius: 6px; border-left: 3px solid var(--primary);">
+        <strong style="color: var(--primary); display: block; margin-bottom: 0.3rem;">Derechos de petición</strong>
+        <span style="font-size: 0.85rem;">Art. 23 Constitución Política · Ley 1755/2015</span>
+      </div>
+      <div style="padding: 1rem; background: var(--gris-claro); border-radius: 6px; border-left: 3px solid var(--primary);">
+        <strong style="color: var(--primary); display: block; margin-bottom: 0.3rem;">Arreglo directo</strong>
+        <span style="font-size: 0.85rem;">Entre la copropiedad y el constructor</span>
+      </div>
+      <div style="padding: 1rem; background: var(--gris-claro); border-radius: 6px; border-left: 3px solid var(--primary);">
+        <strong style="color: var(--primary); display: block; margin-bottom: 0.3rem;">Conciliación</strong>
+        <span style="font-size: 0.85rem;">Centros autorizados por el Ministerio de Justicia</span>
+      </div>
+      <div style="padding: 1rem; background: var(--gris-claro); border-radius: 6px; border-left: 3px solid var(--primary);">
+        <strong style="color: var(--primary); display: block; margin-bottom: 0.3rem;">Acciones judiciales</strong>
+        <span style="font-size: 0.85rem;">Defensa patrimonial de la copropiedad</span>
+      </div>
+    </div>
+    <div class="alert info" style="margin-top: 1.5rem;">
+      El presente informe constituye <strong>medio de prueba documental idóneo</strong> dentro del proceso de defensa patrimonial de la copropiedad y puede ser aportado en las actuaciones administrativas, conciliatorias o judiciales que se adelanten.
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <p><strong>INGENIUM HOLDING CORP SAS</strong> — NIT 901.180.391-4 — Bogotá, Colombia</p>
+  <p>Documento generado como parte del contrato ZCIHC-032-SALINAS-2 — Abril 2026</p>
+</footer>
+
+<script>
+  Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = '#4a5568';
+
+  // ============ 1. ESTADO ============
+  new Chart(document.getElementById('chartEstado'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Completo (33)', 'Parcial (19)', 'Faltante (20)', 'Por Verificar (36)', 'Pendiente (1)'],
+      datasets: [{
+        data: [33, 19, 20, 36, 1],
+        backgroundColor: ['#38a169', '#d69e2e', '#c53030', '#4299e1', '#a0aec0'],
+        borderColor: '#fff',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 12, usePointStyle: true } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+              const pct = (ctx.parsed / total * 100).toFixed(1);
+              return `${ctx.label}: ${ctx.parsed} (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // ============ 2. NIVEL DE RIESGO ============
+  new Chart(document.getElementById('chartRiesgo'), {
+    type: 'bar',
+    data: {
+      labels: ['CRÍTICO', 'ALTO', 'MEDIO', 'BAJO'],
+      datasets: [{
+        label: 'Ítems con brecha',
+        data: [17, 16, 5, 2],
+        backgroundColor: ['#c53030', '#dd6b20', '#d69e2e', '#38a169'],
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.parsed.x} ítems` } }
+      },
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { stepSize: 5 } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // ============ 3. CATEGORÍAS ============
+  const catData = [
+    { cat: 'Planta/Subestación', total: 5, completo: 4, pct: 80 },
+    { cat: 'RCI y detección', total: 9, completo: 7, pct: 78 },
+    { cat: 'Red eléctrica + iluminación', total: 13, completo: 9, pct: 69 },
+    { cat: 'Seguridad humana + telecom', total: 9, completo: 6, pct: 67 },
+    { cat: 'Red hidráulica', total: 8, completo: 3, pct: 38 },
+    { cat: 'Administrativos', total: 3, completo: 1, pct: 33 },
+    { cat: 'Alcantarillado + cerramiento', total: 3, completo: 1, pct: 33 },
+    { cat: 'Generales legales', total: 11, completo: 2, pct: 18 },
+    { cat: 'Amenidades (no esenciales)', total: 20, completo: 3, pct: 15 },
+    { cat: 'Estructura', total: 8, completo: 1, pct: 13 },
+    { cat: 'Planeación', total: 4, completo: 0, pct: 0 },
+    { cat: 'Red de gas', total: 4, completo: 0, pct: 0 },
+    { cat: 'Ascensores', total: 4, completo: 0, pct: 0 }
+  ];
+  new Chart(document.getElementById('chartCategorias'), {
+    type: 'bar',
+    data: {
+      labels: catData.map(d => d.cat),
+      datasets: [{
+        label: '% de cumplimiento documental',
+        data: catData.map(d => d.pct),
+        backgroundColor: catData.map(d => d.pct >= 70 ? '#38a169' : d.pct >= 40 ? '#d69e2e' : d.pct >= 20 ? '#dd6b20' : '#c53030'),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const d = catData[ctx.dataIndex];
+              return `${d.pct}% — ${d.completo} de ${d.total} ítems completos`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, max: 100, grid: { color: '#e2e8f0' }, ticks: { callback: v => v + '%' } },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+
+  // ============ 4. ACUEDUCTO ============
+  const torres = ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10'];
+  const cert = [96, 96, 6, 4, 0, 0, 0, 0, 1, 1];
+  new Chart(document.getElementById('chartAcueducto'), {
+    type: 'bar',
+    data: {
+      labels: torres,
+      datasets: [
+        {
+          label: 'Certificados presentes',
+          data: cert,
+          backgroundColor: cert.map(c => c === 96 ? '#38a169' : c > 0 ? '#dd6b20' : '#c53030'),
+          borderRadius: 4,
+          stack: 'Stack 0'
+        },
+        {
+          label: 'Certificados faltantes',
+          data: cert.map(c => 96 - c),
+          backgroundColor: '#e2e8f0',
+          borderRadius: 4,
+          stack: 'Stack 0'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 10, usePointStyle: true } },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y}` } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false } },
+        y: { stacked: true, beginAtZero: true, max: 96, grid: { color: '#e2e8f0' }, title: { display: true, text: 'Apartamentos' } }
+      }
+    }
+  });
+
+  // ============ 5. RETIE / RITEL ============
+  const retieData = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10'].map(t => {
+    const retie = ['T1','T2','T3','T7','T9','T10'].includes(t) ? 1 : 0;
+    const ritel = ['T1','T2','T3','T9','T10'].includes(t) ? 1 : 0;
+    return { torre: t, retie, ritel };
+  });
+  new Chart(document.getElementById('chartRetie'), {
+    type: 'bar',
+    data: {
+      labels: retieData.map(d => d.torre),
+      datasets: [
+        {
+          label: 'RETIE',
+          data: retieData.map(d => d.retie),
+          backgroundColor: retieData.map(d => d.retie ? '#38a169' : '#c53030'),
+          borderRadius: 4
+        },
+        {
+          label: 'RITEL',
+          data: retieData.map(d => d.ritel),
+          backgroundColor: retieData.map(d => d.ritel ? '#38a169' : '#c53030'),
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 10, usePointStyle: true } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              return `${ctx.dataset.label}: ${ctx.parsed.y ? 'Presente ✓' : 'Ausente ✗'}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { beginAtZero: true, max: 1.2, ticks: { stepSize: 1, callback: v => v === 1 ? 'Sí' : v === 0 ? 'No' : '' }, grid: { color: '#e2e8f0' } }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
